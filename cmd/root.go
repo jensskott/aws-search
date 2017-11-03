@@ -15,6 +15,6 @@ var RootCmd = &cobra.Command{
 	        means of accessing amazon.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("test")
+		fmt.Println("Uset -h, --help to get help how to use the application")
 	},
 }
