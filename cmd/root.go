@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// RootCmd base command for cli interface
 var RootCmd = &cobra.Command{
 	Use:   "aws-search",
 	Short: "Search for aws resources",

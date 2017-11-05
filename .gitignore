@@ -18,3 +18,5 @@ build/
 # Vendor
 vendor/
 
+
+.idea/

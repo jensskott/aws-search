@@ -10,7 +10,7 @@ BUILD_DIR=build
 BINARY_NAME=$(APP_NAME)
 MOCK_DIR=mocks
 
-all: clean build package
+all: clean build
 
 vet:
 	@go vet `glide novendor`
@@ -27,7 +27,7 @@ run:
 
 build: vet test
 	@mkdir -p $(BUILD_DIR)
-	GOOS=linux GOARCH=amd64 $(GO_BUILD_CMD) -o $(BUILD_DIR)/$(BINARY_NAME)-linux-amd64
+	#GOOS=linux GOARCH=amd64 $(GO_BUILD_CMD) -o $(BUILD_DIR)/$(BINARY_NAME)-linux-amd64
 	GOOS=darwin GOARCH=amd64 $(GO_BUILD_CMD) -o $(BUILD_DIR)/$(BINARY_NAME)-darwin-amd64
 
 package:
