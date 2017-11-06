@@ -8,14 +8,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var Filter []string
+var Regions []string
+
 func init() {
 	// Add commands
 	RootCmd.AddCommand(ec2)
 	ec2.AddCommand(eip)
-
 	// Add flags
-	ec2.Flags().StringSlice("filter", []string{}, "Filter resources")
+	RootCmd.PersistentFlags().StringSliceVarP(&Filter, "filter", "f", nil, "Filter resources in aws")
 
+	client := ec2Client.NewClient("eu-west-1")
+	Regions, _ = client.Ec2GetRegions()
 }
 
 var ec2 = &cobra.Command{
@@ -29,9 +33,9 @@ var eip = &cobra.Command{
 	Short: "Use to list eip resources",
 	Long:  "Use to list eips and apply filters to search",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(ec2.Flags().GetStringSlice("filter"))
+		fmt.Println(Regions)
 		client := ec2Client.NewClient("us-west-2")
-		eips, err := client.Ec2DescribeEips()
+		eips, err := client.Ec2DescribeEips(Filter)
 		if err != nil {
 			log.Fatal(err)
 		}

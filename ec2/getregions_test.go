@@ -1,7 +1,6 @@
 package ec2
 
 import (
-	"encoding/json"
 	"errors"
 	"testing"
 
@@ -12,15 +11,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestEc2DescribeEip(t *testing.T) {
+func TestEc2GetRegions(t *testing.T) {
 	// Create a mock respons for ec2 describe
-	resp := &ec2.DescribeAddressesOutput{
-		Addresses: []*ec2.Address{
+	resp := &ec2.DescribeRegionsOutput{
+		Regions: []*ec2.Region{
 			{
-				PublicIp: aws.String("52.52.0.12"),
+				RegionName: aws.String("eu-west-1"),
 			},
 			{
-				PublicIp: aws.String("32.18.22.24"),
+				RegionName: aws.String("ap-southeast-1"),
 			},
 		},
 	}
@@ -29,40 +28,34 @@ func TestEc2DescribeEip(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	mockSvc := mock.NewMockEC2API(ctrl)
-	mockSvc.EXPECT().DescribeAddresses(gomock.Any()).Return(resp, nil)
+	mockSvc.EXPECT().DescribeRegions(gomock.Any()).Return(resp, nil)
 
 	// Create client
 	e := Ec2Implementation{
 		Svc: mockSvc,
 	}
 
-	testFilter := []string{"public-ip 52.52.0.12", "public-ip 32.18.22.24"}
-
 	// Run describe describe
-	testResp, err := e.Ec2DescribeEips(testFilter)
+	testResp, err := e.Ec2GetRegions()
 
 	assert.NoError(t, err)
 
 	// Need two in slice
+
 	assert.Equal(t, 2, len(testResp))
 
-	var m []*ec2.Address
-
-	b, _ := json.Marshal(testResp)
-	json.Unmarshal(b, &m)
-
 	// Compare respons with what you want to get
-	assert.Equal(t, "52.52.0.12", *m[0].PublicIp)
-	assert.Equal(t, "32.18.22.24", *m[1].PublicIp)
+	assert.Equal(t, "eu-west-1", testResp[0])
+	assert.Equal(t, "ap-southeast-1", testResp[1])
 
 }
 
-func TestEc2DescribeEipsError(t *testing.T) {
+func TestEc2GetRegionsError(t *testing.T) {
 	// Setup gomock controller with data
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	mockSvc := mock.NewMockEC2API(ctrl)
-	mockSvc.EXPECT().DescribeAddresses(gomock.Any()).Return(nil, errors.New("I got a booboo"))
+	mockSvc.EXPECT().DescribeRegions(gomock.Any()).Return(nil, errors.New("I got a booboo"))
 
 	// Create client
 	e := Ec2Implementation{
@@ -70,7 +63,7 @@ func TestEc2DescribeEipsError(t *testing.T) {
 	}
 
 	// Run describe describe
-	testResp, err := e.Ec2DescribeEips([]string{})
+	testResp, err := e.Ec2GetRegions()
 	assert.Error(t, err)
 
 	assert.Nil(t, testResp)
