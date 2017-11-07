@@ -1,7 +1,6 @@
 package ec2
 
 import (
-	"encoding/json"
 	"errors"
 	"testing"
 
@@ -46,14 +45,9 @@ func TestEc2DescribeEip(t *testing.T) {
 	// Need two in slice
 	assert.Equal(t, 2, len(testResp))
 
-	var m []*ec2.Address
-
-	b, _ := json.Marshal(testResp)
-	json.Unmarshal(b, &m)
-
 	// Compare respons with what you want to get
-	assert.Equal(t, "52.52.0.12", *m[0].PublicIp)
-	assert.Equal(t, "32.18.22.24", *m[1].PublicIp)
+	assert.Equal(t, "52.52.0.12", *testResp[0].PublicIp)
+	assert.Equal(t, "32.18.22.24", *testResp[1].PublicIp)
 
 }
 

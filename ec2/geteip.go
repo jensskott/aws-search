@@ -7,10 +7,10 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
-func (e *Ec2Implementation) Ec2DescribeEips(f []string) ([]interface{}, error) {
+// Ec2DescribeEips to get elastic ips from a region
+func (e *Ec2Implementation) Ec2DescribeEips(f []string) ([]*ec2.Address, error) {
 	// Create interfaces for returns
-	var dataSlice []interface{}
-	var data interface{}
+	var dataSlice []*ec2.Address
 
 	// Create filter from slice
 	var filter []*ec2.Filter
@@ -37,8 +37,7 @@ func (e *Ec2Implementation) Ec2DescribeEips(f []string) ([]interface{}, error) {
 
 	// Add all data from the respons to the interface
 	for _, a := range resp.Addresses {
-		data = a
-		dataSlice = append(dataSlice, data)
+		dataSlice = append(dataSlice, a)
 	}
 
 	return dataSlice, nil
