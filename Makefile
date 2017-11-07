@@ -13,21 +13,21 @@ MOCK_DIR=mocks
 all: clean build
 
 vet:
-	@go vet `glide novendor`
+	@go vet ./...
 
 mockgen:
 	@echo "Generating mocks..."
 	mockgen -source=vendor/github.com/aws/aws-sdk-go/service/ec2/ec2iface/interface.go -destination=$(MOCK_DIR)/mock-ec2iface.go -package=mocks
 
 test: mockgen
-	@go test `glide novendor`
+	@go test ./...
 
 run:
 	go run ./*.go $(RUN_ARGS)
 
 build: vet test
 	@mkdir -p $(BUILD_DIR)
-	#GOOS=linux GOARCH=amd64 $(GO_BUILD_CMD) -o $(BUILD_DIR)/$(BINARY_NAME)-linux-amd64
+	GOOS=linux GOARCH=amd64 $(GO_BUILD_CMD) -o $(BUILD_DIR)/$(BINARY_NAME)-linux-amd64
 	GOOS=darwin GOARCH=amd64 $(GO_BUILD_CMD) -o $(BUILD_DIR)/$(BINARY_NAME)-darwin-amd64
 
 package:

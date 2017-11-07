@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"log"
-
 	"os"
 
 	"github.com/aws/aws-sdk-go/service/ec2"
@@ -13,14 +12,14 @@ import (
 )
 
 // Get elastic ips from ec2 for all regions
-var eip = &cobra.Command{
-	Use:   "eip",
-	Short: "Use to list eip resources",
-	Long:  "Use to list eips and apply filters to search",
+var cgw = &cobra.Command{
+	Use:   "cgw",
+	Short: "Use to list customer gateway resources",
+	Long:  "Use to list customer gateway and apply filters to search",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Create slice for data
 		var data [][]string
-		var rawData []*ec2.Address
+		var rawData []*ec2.CustomerGateway
 
 		// Range over each ec2 region
 		for _, r := range Regions {
@@ -28,7 +27,7 @@ var eip = &cobra.Command{
 			client := ec2Client.NewClient(r)
 
 			// Get eip data
-			resp, err := client.Ec2DescribeEips(Filter)
+			resp, err := client.Ec2DescribeCustomerGateway(Filter)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -38,7 +37,7 @@ var eip = &cobra.Command{
 				// Add the data to the slice for data to printout
 				for _, d := range resp {
 					if Raw == false {
-						data = append(data, []string{*d.PublicIp, *d.PrivateIpAddress, *d.InstanceId, *d.NetworkInterfaceId, r})
+						data = append(data, []string{*d.CustomerGatewayId, *d.IpAddress, *d.State, r})
 					} else {
 						rawData = append(rawData, d)
 					}
@@ -47,11 +46,10 @@ var eip = &cobra.Command{
 
 		}
 		if Raw == false {
-			// Write to std out
 			table := tablewriter.NewWriter(os.Stdout)
 
 			// Set the table header
-			table.SetHeader([]string{"Public IP", "Private IP", "Instance", "Network Interface", "Region"})
+			table.SetHeader([]string{"Gateway ID", "IP address", "State", "Region"})
 
 			// Append all data to table
 			for _, d := range data {

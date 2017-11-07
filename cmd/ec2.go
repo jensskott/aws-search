@@ -11,13 +11,18 @@ var Filter []string
 // Regions for global access
 var Regions []string
 
+// Raw output
+var Raw bool
+
 func init() {
 	// Add commands
 	RootCmd.AddCommand(ec2cmd)
 	ec2cmd.AddCommand(eip)
+	ec2cmd.AddCommand(cgw)
 
 	// Add flags
 	RootCmd.PersistentFlags().StringSliceVarP(&Filter, "filter", "f", nil, "Filter resources in aws")
+	RootCmd.PersistentFlags().BoolVarP(&Raw, "raw", "r", false, "To print out raw json from response")
 
 	// Get ec2 regions dynamicly
 	client := ec2Client.NewClient("eu-west-1")

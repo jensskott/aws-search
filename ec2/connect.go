@@ -6,6 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
+// NewClient for ec2
 func NewClient(region string) Ec2Implementation {
 	var ec2Client Ec2Implementation
 	ec2Client.Session = session.Must(session.NewSession(&aws.Config{Region: aws.String(region)}))

@@ -9,9 +9,6 @@ import (
 
 // Ec2DescribeEips to get elastic ips from a region
 func (e *Ec2Implementation) Ec2DescribeEips(f []string) ([]*ec2.Address, error) {
-	// Create interfaces for returns
-	var dataSlice []*ec2.Address
-
 	// Create filter from slice
 	var filter []*ec2.Filter
 	if f != nil {
@@ -35,10 +32,5 @@ func (e *Ec2Implementation) Ec2DescribeEips(f []string) ([]*ec2.Address, error) 
 		return nil, err
 	}
 
-	// Add all data from the respons to the interface
-	for _, a := range resp.Addresses {
-		dataSlice = append(dataSlice, a)
-	}
-
-	return dataSlice, nil
+	return resp.Addresses, nil
 }

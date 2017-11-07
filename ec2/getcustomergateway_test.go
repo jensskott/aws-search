@@ -1,7 +1,6 @@
 package ec2
 
 import (
-	"encoding/json"
 	"errors"
 	"testing"
 
@@ -38,25 +37,20 @@ func TestEc2GetCustomerGateway(t *testing.T) {
 		Svc: mockSvc,
 	}
 
+	testFilter := []string{"ip-address 82.99.52.58", "ip-address 165.84.162.17"}
 	// Run describe describe
-	testResp, err := e.Ec2DescribeCustomerGateway()
+	testResp, err := e.Ec2DescribeCustomerGateway(testFilter)
 
 	assert.NoError(t, err)
 
 	// Need two in slice
-
 	assert.Equal(t, 2, len(testResp))
 
-	var m []*ec2.CustomerGateway
-
-	b, _ := json.Marshal(testResp)
-	json.Unmarshal(b, &m)
-
 	// Compare respons with what you want to get
-	assert.Equal(t, "cgw-34d65f04", *m[0].CustomerGatewayId)
-	assert.Equal(t, "165.84.162.17", *m[0].IpAddress)
-	assert.Equal(t, "cgw-c3129ef3", *m[1].CustomerGatewayId)
-	assert.Equal(t, "82.99.52.58", *m[1].IpAddress)
+	assert.Equal(t, "cgw-34d65f04", *testResp[0].CustomerGatewayId)
+	assert.Equal(t, "165.84.162.17", *testResp[0].IpAddress)
+	assert.Equal(t, "cgw-c3129ef3", *testResp[1].CustomerGatewayId)
+	assert.Equal(t, "82.99.52.58", *testResp[1].IpAddress)
 
 }
 
@@ -73,7 +67,7 @@ func TestEc2DescribeCustomerGatewayError(t *testing.T) {
 	}
 
 	// Run describe describe
-	testResp, err := e.Ec2DescribeCustomerGateway()
+	testResp, err := e.Ec2DescribeCustomerGateway([]string{})
 	assert.Error(t, err)
 
 	assert.Nil(t, testResp)
