@@ -15,7 +15,24 @@ import (
 var cgw = &cobra.Command{
 	Use:   "cgw",
 	Short: "Use to list customer gateway resources",
-	Long:  "Use to list customer gateway and apply filters to search",
+	Long: `Use to list customer gateway and apply filters to search
+			Available filters are:
+			
+			bgp-asn - The customer gateway's Border Gateway Protocol (BGP) Autonomous System Number (ASN).
+			
+			customer-gateway-id - The ID of the customer gateway.
+			
+			ip-address - The IP address of the customer gateway's Internet-routable external interface.
+			
+			state - The state of the customer gateway (pending | available | deleting | deleted ).
+			
+			tag-key - The key of a tag assigned to the resource. This filter is independent of the tag-value
+			filter. For example, if you use both the filter "tag-key=Purpose" and the filter "tag-value=X",
+			you get any resources assigned both the tag key Purpose (regardless of what the tag's value is), 
+			and the tag value X (regardless of what the tag's key is). If you want to list only resources where
+			Purpose is X, see the tag :key =*value* filter.
+			
+			tag-value - The value of a tag assigned to the resource. This filter is independent of the tag-key filter.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Create slice for data
 		var data [][]string
