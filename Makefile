@@ -8,7 +8,7 @@ GO_LDFLAGS= -ldflags="-X main.AppVersion=$(APP_VERSION) -X main.AppName=$(APP_NA
 GO_BUILD_CMD=$(GO_FLAGS) go build $(GO_LDFLAGS)
 BUILD_DIR=build
 BINARY_NAME=$(APP_NAME)
-MOCK_DIR=mocks
+MOCK_DIR=_mocks
 
 all: clean build
 

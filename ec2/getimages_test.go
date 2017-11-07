@@ -1,14 +1,13 @@
 package ec2
 
 import (
-	"encoding/json"
 	"errors"
 	"testing"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/golang/mock/gomock"
-	mock "github.com/jensskott/aws-search/mocks"
+	mock "github.com/jensskott/aws-search/_mocks"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,23 +34,18 @@ func TestEc2DescribeImages(t *testing.T) {
 	e := Ec2Implementation{
 		Svc: mockSvc,
 	}
-
+	testFilter := []string{"image-id ami-8bf746e4", "image-id ami-dcfe02b3"}
 	// Run describe describe
-	testResp, err := e.Ec2DescribeImages()
+	testResp, err := e.Ec2DescribeImages(testFilter)
 
 	assert.NoError(t, err)
 
 	// Need two in slice
 	assert.Equal(t, 2, len(testResp))
 
-	var m []*ec2.Image
-
-	b, _ := json.Marshal(testResp)
-	json.Unmarshal(b, &m)
-
 	// Compare respons with what you want to get
-	assert.Equal(t, "ami-8bf746e4", *m[0].ImageId)
-	assert.Equal(t, "ami-dcfe02b3", *m[1].ImageId)
+	assert.Equal(t, "ami-8bf746e4", *testResp[0].ImageId)
+	assert.Equal(t, "ami-dcfe02b3", *testResp[1].ImageId)
 
 }
 
@@ -68,7 +62,7 @@ func TestEc2DescribeImagesError(t *testing.T) {
 	}
 
 	// Run describe describe
-	testResp, err := e.Ec2DescribeImages()
+	testResp, err := e.Ec2DescribeImages([]string{})
 	assert.Error(t, err)
 
 	assert.Nil(t, testResp)

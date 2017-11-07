@@ -19,6 +19,8 @@ func init() {
 	RootCmd.AddCommand(ec2cmd)
 	ec2cmd.AddCommand(eip)
 	ec2cmd.AddCommand(cgw)
+	ec2cmd.AddCommand(iamipa)
+	ec2cmd.AddCommand(ami)
 
 	// Add flags
 	RootCmd.PersistentFlags().StringSliceVarP(&Filter, "filter", "f", nil, "Filter resources in aws")
