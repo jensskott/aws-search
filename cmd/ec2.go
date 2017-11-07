@@ -16,11 +16,12 @@ var Raw bool
 
 func init() {
 	// Add commands
-	RootCmd.AddCommand(ec2cmd)
-	ec2cmd.AddCommand(eip)
-	ec2cmd.AddCommand(cgw)
-	ec2cmd.AddCommand(iamipa)
-	ec2cmd.AddCommand(ami)
+	RootCmd.AddCommand(ec2Cmd)
+	RootCmd.AddCommand(initCmd)
+	ec2Cmd.AddCommand(eip)
+	ec2Cmd.AddCommand(cgw)
+	ec2Cmd.AddCommand(iamipa)
+	ec2Cmd.AddCommand(ami)
 
 	// Add flags
 	RootCmd.PersistentFlags().StringSliceVarP(&Filter, "filter", "f", nil, "Filter resources in aws")
@@ -32,8 +33,18 @@ func init() {
 }
 
 // Ec2 subcommand for ec2 resources
-var ec2cmd = &cobra.Command{
+var ec2Cmd = &cobra.Command{
 	Use:   "ec2",
 	Short: "Use to list ec2 resources",
 	Long:  "Subcommand to access the ec2 resources and list them",
+}
+
+// TODO: add init command to get creds for switchrole and get all account numbers into a variable to use in filters
+var initCmd = &cobra.Command{
+	Use:   "init",
+	Short: "initialize aws-search",
+	Long:  "Used to initialize aws-search and get assume role credentials for all accounts in the config file",
+	Run: func(cmd *cobra.Command, args []string) {
+
+	},
 }

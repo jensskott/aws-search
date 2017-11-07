@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	"os"
 
@@ -56,7 +55,7 @@ var ami = &cobra.Command{
 			// Get eip data
 			resp, err := client.Ec2DescribeImages(Filter)
 			if err != nil {
-				log.Fatal(err)
+
 			}
 
 			// Make sure you append only if you get a respons
@@ -64,7 +63,7 @@ var ami = &cobra.Command{
 				// Add the data to the slice for data to printout
 				for _, d := range resp {
 					if Raw == false {
-						data = append(data, []string{*d.Name, *d.ImageId, *d.Platform, r})
+						data = append(data, []string{*d.Name, *d.ImageId, *d.CreationDate, r})
 					} else {
 						rawData = append(rawData, d)
 					}
@@ -77,7 +76,7 @@ var ami = &cobra.Command{
 			table := tablewriter.NewWriter(os.Stdout)
 
 			// Set the table header
-			table.SetHeader([]string{"Name", "Image ID", "Platform", "Region"})
+			table.SetHeader([]string{"Name", "Image ID", "Creation Date", "Region"})
 
 			// Append all data to table
 			for _, d := range data {

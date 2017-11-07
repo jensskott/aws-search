@@ -20,6 +20,12 @@ func (e *Ec2Implementation) Ec2DescribeImages(f []string) ([]*ec2.Image, error) 
 			filter = append(filter, x)
 		}
 	}
+	// #TODO: Use value from account number running as filter value
+	// Filter out only own ami images
+	filter = append(filter, &ec2.Filter{
+		Name:   aws.String("owner-id"),
+		Values: []*string{aws.String("962744915737")},
+	})
 
 	params := &ec2.DescribeImagesInput{
 		Filters: filter,
