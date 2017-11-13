@@ -36,8 +36,9 @@ func TestEc2DescribeKeypairs(t *testing.T) {
 		Svc: mockSvc,
 	}
 
+	testFilter := []string{"key-name aws_key", "key-name masterkey"}
 	// Run describe describe
-	testResp, err := e.Ec2DescribeKeypairs()
+	testResp, err := e.Ec2DescribeKeypairs(testFilter)
 
 	assert.NoError(t, err)
 
@@ -50,8 +51,8 @@ func TestEc2DescribeKeypairs(t *testing.T) {
 	json.Unmarshal(b, &m)
 
 	// Compare respons with what you want to get
-	assert.Equal(t, "aws_key", *m[0].KeyName)
-	assert.Equal(t, "masterkey", *m[1].KeyName)
+	assert.Equal(t, "aws_key", *testResp[0].KeyName)
+	assert.Equal(t, "masterkey", *testResp[1].KeyName)
 
 }
 
@@ -68,7 +69,7 @@ func TestEc2DescribeKeypairsError(t *testing.T) {
 	}
 
 	// Run describe describe
-	testResp, err := e.Ec2DescribeKeypairs()
+	testResp, err := e.Ec2DescribeKeypairs([]string{})
 	assert.Error(t, err)
 
 	assert.Nil(t, testResp)

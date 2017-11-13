@@ -36,8 +36,9 @@ func TestEc2DescribeInternetGateways(t *testing.T) {
 		Svc: mockSvc,
 	}
 
+	testFilter := []string{"internet-gateway-id igw-992fb9f0", "internet-gateway-id igw-1f9f7376"}
 	// Run describe describe
-	testResp, err := e.Ec2DescribeInternetGateways()
+	testResp, err := e.Ec2DescribeInternetGateways(testFilter)
 
 	assert.NoError(t, err)
 
@@ -50,8 +51,8 @@ func TestEc2DescribeInternetGateways(t *testing.T) {
 	json.Unmarshal(b, &m)
 
 	// Compare respons with what you want to get
-	assert.Equal(t, "igw-992fb9f0", *m[0].InternetGatewayId)
-	assert.Equal(t, "igw-1f9f7376", *m[1].InternetGatewayId)
+	assert.Equal(t, "igw-992fb9f0", *testResp[0].InternetGatewayId)
+	assert.Equal(t, "igw-1f9f7376", *testResp[1].InternetGatewayId)
 
 }
 
@@ -68,7 +69,7 @@ func TestEc2DescribeInternetGatewaysError(t *testing.T) {
 	}
 
 	// Run describe describe
-	testResp, err := e.Ec2DescribeInternetGateways()
+	testResp, err := e.Ec2DescribeInternetGateways([]string{})
 	assert.Error(t, err)
 
 	assert.Nil(t, testResp)

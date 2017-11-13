@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"log"
+
 	"os"
 
 	"github.com/aws/aws-sdk-go/service/ec2"
@@ -12,23 +13,27 @@ import (
 )
 
 // Get elastic ips from ec2 for all regions
-var cgw = &cobra.Command{
-	Use:   "cgw",
-	Short: "Use to list customer gateway resources",
-	Long: `Use to list customer gateway and apply filters to search
+var igw = &cobra.Command{
+	Use:   "igw",
+	Short: "Use to list internet gateway resources",
+	Long: `Use to list internet gateway and apply filters to search
 
 Available filters are:
 
-bgp-asn - The customer gateway's Border Gateway Protocol (BGP) Autonomous System Number (ASN).
+attachment.state - The current state of the attachment between
+the gateway and the VPC (available ). Present only if a VPC is attached.
 
-customer-gateway-id - The ID of the customer gateway.
+attachment.vpc-id - The ID of an attached VPC.
 
-ip-address - The IP address of the customer gateway's Internet-routable external interface.
+internet-gateway-id - The ID of the Internet gateway.
 
-state - The state of the customer gateway (pending | available | deleting | deleted ).
+tag :key =*value* - The key/value combination of a tag assigned to the resource.
+Specify the key of the tag in the filter name and the value of the tag in the filter value.
+For example, for the tag Purpose=X, specify tag:Purpose for the filter name and X for the filter value.
 
-tag-key - The key of a tag assigned to the resource. This filter is independent of the tag-value
-filter. For example, if you use both the filter "tag-key=Purpose" and the filter "tag-value=X",
+tag-key - The key of a tag assigned to the resource.
+This filter is independent of the tag-value filter. For example,
+if you use both the filter "tag-key=Purpose" and the filter "tag-value=X",
 you get any resources assigned both the tag key Purpose (regardless of what the tag's value is),
 and the tag value X (regardless of what the tag's key is). If you want to list only resources where
 Purpose is X, see the tag :key =*value* filter.
@@ -37,7 +42,7 @@ tag-value - The value of a tag assigned to the resource. This filter is independ
 	Run: func(cmd *cobra.Command, args []string) {
 		// Create slice for data
 		var data [][]string
-		var rawData []*ec2.CustomerGateway
+		var rawData []*ec2.InternetGateway
 
 		// Range over each ec2 region
 		for _, r := range Regions {
@@ -45,7 +50,7 @@ tag-value - The value of a tag assigned to the resource. This filter is independ
 			client := ec2Client.NewClient(r)
 
 			// Get eip data
-			resp, err := client.Ec2DescribeCustomerGateway(Filter)
+			resp, err := client.Ec2DescribeInternetGateways(Filter)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -55,7 +60,7 @@ tag-value - The value of a tag assigned to the resource. This filter is independ
 				// Add the data to the slice for data to printout
 				for _, d := range resp {
 					if Raw == false {
-						data = append(data, []string{*d.CustomerGatewayId, *d.IpAddress, *d.State, r})
+						data = append(data, []string{*d.InternetGatewayId, r})
 					} else {
 						rawData = append(rawData, d)
 					}
@@ -64,10 +69,11 @@ tag-value - The value of a tag assigned to the resource. This filter is independ
 
 		}
 		if Raw == false {
+			// Write to std out
 			table := tablewriter.NewWriter(os.Stdout)
 
 			// Set the table header
-			table.SetHeader([]string{"Gateway ID", "IP address", "State", "Region"})
+			table.SetHeader([]string{"Internet Gateway ID", "Region"})
 
 			// Append all data to table
 			for _, d := range data {

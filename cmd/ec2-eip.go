@@ -17,23 +17,24 @@ var eip = &cobra.Command{
 	Use:   "eip",
 	Short: "Use to list elastic ips resources",
 	Long: `Use to list elastic ips and apply filters to search
-		   Available filters are:
+
+Available filters are:
 		   
-		   allocation-id - [EC2-VPC] The allocation ID for the address.
-		   
-		   association-id - [EC2-VPC] The association ID for the address.
-		   
-		   domain - Indicates whether the address is for use in EC2-Classic (standard ) or in a VPC (vpc ).
-		   
-		   instance-id - The ID of the instance the address is associated with, if any.
-		   
-		   network-interface-id - [EC2-VPC] The ID of the network interface that the address is associated with, if any.
-		   
-		   network-interface-owner-id - The AWS account ID of the owner.
-		   
-		   private-ip-address - [EC2-VPC] The private IP address associated with the Elastic IP address.
-		   
-		   public-ip - The Elastic IP address.`,
+allocation-id - [EC2-VPC] The allocation ID for the address.
+
+association-id - [EC2-VPC] The association ID for the address.
+
+domain - Indicates whether the address is for use in EC2-Classic (standard ) or in a VPC (vpc ).
+
+instance-id - The ID of the instance the address is associated with, if any.
+
+network-interface-id - [EC2-VPC] The ID of the network interface that the address is associated with, if any.
+
+network-interface-owner-id - The AWS account ID of the owner.
+
+private-ip-address - [EC2-VPC] The private IP address associated with the Elastic IP address.
+
+public-ip - The Elastic IP address.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Create slice for data
 		var data [][]string

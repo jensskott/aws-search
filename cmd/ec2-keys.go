@@ -13,21 +13,20 @@ import (
 )
 
 // Get elastic ips from ec2 for all regions
-var iamipa = &cobra.Command{
-	Use:   "iamipa",
-	Short: "Use to list iam instance profice associations resources",
-	Long: `Use to list iam instance profice associations and apply filters to search
+var key = &cobra.Command{
+	Use:   "key",
+	Short: "Use to list key pair resources",
+	Long: `Use to list key pair and apply filters to search
 
 Available filters are:
 
-instance-id - The ID of the instance.
+fingerprint - The fingerprint of the key pair.
 
-state - The state of the association
-(associating | associated | disassociating | disassociated ).`,
+key-name - The name of the key pair.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Create slice for data
 		var data [][]string
-		var rawData []*ec2.IamInstanceProfileAssociation
+		var rawData []*ec2.KeyPairInfo
 
 		// Range over each ec2 region
 		for _, r := range Regions {
@@ -35,7 +34,7 @@ state - The state of the association
 			client := ec2Client.NewClient(r)
 
 			// Get eip data
-			resp, err := client.Ec2DescribeIamInstanceProfileAssociations(Filter)
+			resp, err := client.Ec2DescribeKeypairs(Filter)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -45,7 +44,7 @@ state - The state of the association
 				// Add the data to the slice for data to printout
 				for _, d := range resp {
 					if Raw == false {
-						data = append(data, []string{*d.IamInstanceProfile.Arn, *d.InstanceId, *d.State, r})
+						data = append(data, []string{*d.KeyName, r})
 					} else {
 						rawData = append(rawData, d)
 					}
@@ -58,7 +57,7 @@ state - The state of the association
 			table := tablewriter.NewWriter(os.Stdout)
 
 			// Set the table header
-			table.SetHeader([]string{"Instance Profile Arn", "Instance", "State", "Region"})
+			table.SetHeader([]string{"Keypair Name", "Region"})
 
 			// Append all data to table
 			for _, d := range data {

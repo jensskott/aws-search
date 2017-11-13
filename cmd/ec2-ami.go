@@ -15,33 +15,34 @@ import (
 var ami = &cobra.Command{
 	Use:   "ami",
 	Short: "Use to list ami resources",
-	Long: `Use to list amis and apply filters to search
-		   Available filters are:
+	Long: `Use to list amis and apply filters to search.
 
-	       architecture - The image architecture (i386 | x86_64 ).
+Available filters are:
 
-	       description - The description of the image (provided during image creation).
+architecture - The image architecture (i386 | x86_64 ).
 
-		   image-id - The ID of the image.
+description - The description of the image (provided during image creation).
 
-	       name - The name of the AMI (provided during image creation).
+image-id - The ID of the image.
 
-	       owner-id - The AWS account ID of the image owner.
+name - The name of the AMI (provided during image creation).
 
-		   platform - The platform. To only list Windows-based AMIs, use windows .
+owner-id - The AWS account ID of the image owner.
 
-		   state - The state of the image (available | pending | failed ).
+platform - The platform. To only list Windows-based AMIs, use windows .
 
-		   tag :key =*value* - The key/value combination of a tag assigned to the resource.
-		   Specify the key of the tag in the filter name and the value of the tag in the filter value.
-		   For example, for the tag Purpose=X, specify tag:Purpose for the filter name and X for the filter value.
+state - The state of the image (available | pending | failed ).
 
-	       tag-key - The key of a tag assigned to the resource. This filter is independent of the tag-value filter.
-	       For example, if you use both the filter "tag-key=Purpose" and the filter "tag-value=X", you get any resources
-		   assigned both the tag key Purpose (regardless of what the tag's value is), and the tag value X (regardless of what the tag's key is).
-		   If you want to list only resources where Purpose is X, see the tag :key =*value* filter.
+tag :key =*value* - The key/value combination of a tag assigned to the resource.
+Specify the key of the tag in the filter name and the value of the tag in the filter value.
+For example, for the tag Purpose=X, specify tag:Purpose for the filter name and X for the filter value.
 
-		   tag-value - The value of a tag assigned to the resource. This filter is independent of the tag-key filter.`,
+tag-key - The key of a tag assigned to the resource. This filter is independent of the tag-value filter.
+For example, if you use both the filter "tag-key=Purpose" and the filter "tag-value=X", you get any resources
+assigned both the tag key Purpose (regardless of what the tag's value is), and the tag value X (regardless of what the tag's key is).
+If you want to list only resources where Purpose is X, see the tag :key =*value* filter.
+
+tag-value - The value of a tag assigned to the resource. This filter is independent of the tag-key filter.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Create slice for data
 		var data [][]string

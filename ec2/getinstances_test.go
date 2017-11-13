@@ -42,8 +42,9 @@ func TestEc2DescribeInstances(t *testing.T) {
 		Svc: mockSvc,
 	}
 
+	testFilter := []string{"instance-id i-06baca28edca29ce9", "instance-id i-321afd87"}
 	// Run describe describe
-	testResp, err := e.Ec2DescribeInstances()
+	testResp, err := e.Ec2DescribeInstances(testFilter)
 
 	assert.NoError(t, err)
 
@@ -56,8 +57,8 @@ func TestEc2DescribeInstances(t *testing.T) {
 	json.Unmarshal(b, &m)
 
 	// Compare respons with what you want to get
-	assert.Equal(t, "i-06baca28edca29ce9", *m[0].InstanceId)
-	assert.Equal(t, "i-321afd87", *m[1].InstanceId)
+	assert.Equal(t, "i-06baca28edca29ce9", *testResp[0].InstanceId)
+	assert.Equal(t, "i-321afd87", *testResp[1].InstanceId)
 
 }
 
@@ -74,7 +75,7 @@ func TestEc2DescribeInstancesError(t *testing.T) {
 	}
 
 	// Run describe describe
-	testResp, err := e.Ec2DescribeInstances()
+	testResp, err := e.Ec2DescribeInstances([]string{})
 	assert.Error(t, err)
 
 	assert.Nil(t, testResp)
